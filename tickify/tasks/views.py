@@ -4,10 +4,10 @@ from django.shortcuts import render
 # Create your views here.
 
 def home(request):
-    return HttpResponse("Головна сторінка.")
+    return render(request, "tasks/home.html",)
 
 def tasks_list(request):
-    return HttpResponse("Список задач.")
+    return render(request, "tasks/tasks_list.html",)
 
 def tasks_detail(request, task_id):
     return HttpResponse(f"Детальна сторінка задачи з id = {task_id}.")
