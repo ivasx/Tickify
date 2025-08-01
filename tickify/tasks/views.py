@@ -4,10 +4,11 @@ from django.shortcuts import render
 # Create your views here.
 
 def home(request):
-    return render(request, "tasks/home.html",)
+    data = {'title': 'Tickify'}
+    return render(request, "tasks/home.html", data)
 
 def tasks_list(request):
-    return render(request, "tasks/tasks_list.html",)
+    return render(request, "tasks/tasks_list.html", {'title': 'Tasks'})
 
 def tasks_detail(request, task_id):
     return HttpResponse(f"Детальна сторінка задачи з id = {task_id}.")
