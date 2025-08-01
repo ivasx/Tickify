@@ -4,8 +4,12 @@ from django.shortcuts import render
 # Create your views here.
 
 def home(request):
-    data = {'title': 'Tickify'}
-    return render(request, "tasks/home.html", data)
+    data = {
+        'title': 'Tickify',
+        'menu': ['Home', 'Tasks', 'Add Task']
+    }
+
+    return render(request, "tasks/home.html", context=data)
 
 def tasks_list(request):
     return render(request, "tasks/tasks_list.html", {'title': 'Tasks'})
