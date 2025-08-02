@@ -6,7 +6,18 @@
 </head>
 <body>
 <h1>Your Tasks</h1>
-<p>Llflflflfl</p>
+
+<ul>
+{% for task in tasks %}
+    <li>
+        <h2>{{ task.title }}</h2>
+        <p>{{ task.description }}</p>
+        <p>{{ task.is_done }}</p>
+        <hr>
+    </li>
+{% endfor %}
+</ul>
+
 <a href="{% url 'home' %}">
   <button>Back</button>
 </a>
