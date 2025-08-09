@@ -9,6 +9,17 @@ tasks_db = [
     {'id': 4, 'title': 'Завдання 4', 'description': 'Опис завдання 4', 'is_done': True},
 ]
 
+def register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            return redirect('home')
+
 def home(request):
     data = {
         'title': 'Tickify',
