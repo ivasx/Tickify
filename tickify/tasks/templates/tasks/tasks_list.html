@@ -9,12 +9,35 @@
 
 <ul>
 {% for task in tasks %}
+    {% if not task.is_done %}
     <li>
         <h2>{{ task.title }}</h2>
         <p>{{ task.description }}</p>
         <p>{{ task.is_done }}</p>
+        {% if not forloop.last %}
         <hr>
+        {% endif %}
     </li>
+    {% endif %}
+{% endfor %}
+</ul>
+
+<hr>
+
+<h1>Completed Tasks</h1>
+
+<ul>
+{% for task in tasks %}
+    {% if task.is_done %}
+    <li>
+        <h2>{{ task.title }}</h2>
+        <p>{{ task.description }}</p>
+        <p>{{ task.is_done }}</p>
+        {% if not forloop.last %}
+        <hr>
+        {% endif %}
+    </li>
+    {% endif %}
 {% endfor %}
 </ul>
 
