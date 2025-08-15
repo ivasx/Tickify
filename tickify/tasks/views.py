@@ -9,6 +9,14 @@ tasks_db = [
     {'id': 4, 'title': 'Завдання 4', 'description': 'Опис завдання 4', 'is_done': True},
 ]
 
+menu = [{'title': 'Home', 'url': 'home'},
+        {'title': 'Tasks', 'url': 'tasks_list'},
+        {'title': 'Add Task', 'url': 'add_task'},
+        {'title': 'Contact', 'url': 'contact'},
+        {'title': 'Login', 'url': 'login'},
+        {'title': 'Register', 'url': 'register'}
+]
+
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -20,10 +28,17 @@ def register(request):
             user = authenticate(username=username, password=password)
             return redirect('home')
 
+def login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            return redirect('home')
+
 def home(request):
     data = {
         'title': 'Tickify',
-        'menu': ['Home', 'Tasks', 'Add Task']
+        'menu': menu,
     }
 
     return render(request, "tasks/home.html", context=data)
@@ -40,6 +55,12 @@ def tasks_detail(request, task_id):
 
 def page_not_found(request, exception):
     return HttpResponseNotFound("<h1>Сторінка не знайдена.</h1>")
+
+def contact(request):
+    return HttpResponse("Контактові дані.")
+
+def add_task(request):
+    return HttpResponse("Додати задачу.")
 
 
 

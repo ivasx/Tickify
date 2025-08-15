@@ -14,6 +14,7 @@
         <h2>{{ task.title }}</h2>
         <p>{{ task.description }}</p>
         <p>{{ task.is_done }}</p>
+        <p><a href="{% url 'tasks_detail' task.id %}">Детальніше</a></p>
         {% if not forloop.last %}
         <hr>
         {% endif %}
@@ -33,6 +34,7 @@
         <h2>{{ task.title }}</h2>
         <p>{{ task.description }}</p>
         <p>{{ task.is_done }}</p>
+        <p><a href="{% url 'tasks_detail' task.id %}">Детальніше</a></p>
         {% if not forloop.last %}
         <hr>
         {% endif %}
