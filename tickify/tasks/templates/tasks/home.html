@@ -7,7 +7,6 @@
 <body>
 <h1>Hello, {{ user.username }}!</h1>
 <ul>
-    <li><a href="{% url 'home' %}">Home</a></li>
     {% for item in menu %}
     <li>
         <a href="{% url item.url %}">{{ item.title }}</a>
