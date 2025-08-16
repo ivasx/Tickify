@@ -60,7 +60,7 @@ def contact(request):
     return HttpResponse("Контактові дані.")
 
 def add_task(request):
-    return HttpResponse("Додати задачу.")
+    return render(request, "tasks/add_task.html")
 
 
 
