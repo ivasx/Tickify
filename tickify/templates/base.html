@@ -1,14 +1,20 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
     <title>{{ title }} | Tickify</title>
+    <link type="text/css" rel="stylesheet" href="{% static 'tasks/css/styles.css' %}">
 </head>
+
 <body>
+{% include 'header.html' %}
+
 {% block content %} {% endblock %}
 
 <a href="{% url 'home' %}">
-  <button>Back</button>
+  <button class="button">Back</button>
 </a>
 </body>
 </html>

@@ -1,42 +1,51 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Your Tasks</h1>
+<div class="content">
+    <h1 class="section-title">Активні завдання</h1>
 
-<ul>
-{% for task in tasks %}
-    {% if not task.is_done %}
-    <li>
-        <h2>{{ task.title }}</h2>
-        <p>{{ task.description }}</p>
-        <p>{{ task.is_done }}</p>
-        <p><a href="{% url 'tasks_detail' task.id %}">Детальніше</a></p>
-        {% if not forloop.last %}
-        <hr>
+    <div class="tasks-grid">
+        {% for task in tasks %}
+        {% if not task.is_done %}
+        <div class="task-card">
+            <h2 class="task-title">{{ task.title }}</h2>
+            <p class="task-description">{{ task.description }}</p>
+            <span class="task-status status-pending">В процесі</span>
+            <br>
+            <a href="{% url 'tasks_detail' task.id %}" class="task-link">Детальніше</a>
+        </div>
         {% endif %}
-    </li>
-    {% endif %}
-{% endfor %}
-</ul>
+        {% empty %}
+        <div class="empty-state">
+            <h3>Поки що немає активних завдань</h3>
+            <p>Створіть своє перше завдання!</p>
+        </div>
+        {% endfor %}
+    </div>
 
-<hr>
+    <h1 class="section-title">Завершені завдання</h1>
 
-<h1>Completed Tasks</h1>
-
-<ul>
-{% for task in tasks %}
-    {% if task.is_done %}
-    <li>
-        <h2>{{ task.title }}</h2>
-        <p>{{ task.description }}</p>
-        <p>{{ task.is_done }}</p>
-        <p><a href="{% url 'tasks_detail' task.id %}">Детальніше</a></p>
-        {% if not forloop.last %}
-        <hr>
+    <div class="tasks-grid">
+        {% for task in tasks %}
+        {% if task.is_done %}
+        <div class="task-card">
+            <h2 class="task-title">{{ task.title }}</h2>
+            <p class="task-description">{{ task.description }}</p>
+            <span class="task-status status-completed">Завершено</span>
+            <br>
+            <a href="{% url 'tasks_detail' task.id %}" class="task-link">Детальніше</a>
+        </div>
         {% endif %}
-    </li>
-    {% endif %}
-{% endfor %}
-</ul>
+        {% endfor %}
+
+        <!-- Показуємо порожній стан тільки якщо немає завершених завдань -->
+        {% if not tasks|length or not tasks %}
+        <div class="empty-state">
+            <h3>Поки що немає завершених завдань</h3>
+            <p>Завершіть своє перше завдання, і воно з'явиться тут</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
 
 {% endblock %}
