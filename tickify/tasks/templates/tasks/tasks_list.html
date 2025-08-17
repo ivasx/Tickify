@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }} | Tickify</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block content %}
+
 <h1>Your Tasks</h1>
 
 <ul>
@@ -43,8 +39,4 @@
 {% endfor %}
 </ul>
 
-<a href="{% url 'home' %}">
-  <button>Back</button>
-</a>
-</body>
-</html>
+{% endblock %}

@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block content %}
+
 <h1>Hello, {{ user.username }}!</h1>
 <ul>
     {% for item in menu %}
@@ -14,7 +10,4 @@
     {% endfor %}
 </ul>
 
-<a href="{% url 'tasks_list' %}">Tasks</a>
-
-</body>
-</html>
+{% endblock %}
