@@ -1,3 +1,4 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from tickify import settings
 
@@ -30,6 +31,5 @@ class Task(models.Model):
     def __str__(self):
         return f"{self.title}"
 
-class User(models.Model):
-    username = models.CharField(max_length=200)
-    password = models.CharField(max_length=200)
+class User(AbstractUser):
+    pass
