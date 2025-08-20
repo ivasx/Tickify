@@ -31,5 +31,11 @@ class Task(models.Model):
     def __str__(self):
         return f"{self.title}"
 
+    class Meta:
+        ordering = ['created_at']
+        indexes = [
+            models.Index(fields=[' created_at']),
+        ]
+
 class User(AbstractUser):
     pass
