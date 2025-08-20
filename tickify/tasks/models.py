@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.urls import reverse
+
 from tickify import settings
 
 
@@ -13,6 +15,7 @@ class Priority(models.IntegerChoices):
     CRITICAL = 4, "Critical"
 
 class Task(models.Model):
+    slug = models.SlugField(max_length=255, unique=True, db_index=True)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     completed = models.BooleanField(default=False)
@@ -34,8 +37,12 @@ class Task(models.Model):
     class Meta:
         ordering = ['created_at']
         indexes = [
-            models.Index(fields=[' created_at']),
+            models.Index(fields=['created_at']),
         ]
+
+    def get_absolute_url(self):
+        return reverse('tasks_detail', kwargs={'task_slug': self.slug})
+
 
 class User(AbstractUser):
     pass

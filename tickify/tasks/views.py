@@ -1,5 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+
+from tasks.models import Task
 
 # Create your views here.
 tasks_db = [
@@ -44,14 +46,22 @@ def home(request):
     return render(request, "tasks/home.html", context=data)
 
 def tasks_list(request):
+    tasks = Task.objects.all()
     data = {
         'title': 'Tasks',
-        'tasks': tasks_db,
+        'tasks': tasks,
     }
     return render(request, "tasks/tasks_list.html", context=data)
 
-def tasks_detail(request, task_id):
-    return HttpResponse(f"Детальна сторінка задачи з id = {task_id}.")
+def tasks_detail(request, task_slug):
+    task = get_object_or_404(Task,slug=task_slug)
+
+    data = {
+        'title': task.title,
+        'task': task,
+    }
+
+    return render(request, "tasks/task_detail.html", context=data)
 
 def page_not_found(request, exception):
     return HttpResponseNotFound("<h1>Сторінка не знайдена.</h1>")

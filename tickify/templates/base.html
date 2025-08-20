@@ -13,8 +13,6 @@
 
 {% block content %} {% endblock %}
 
-<a href="{% url 'home' %}">
-  <button class="button">Back</button>
-</a>
+<button class="button" onclick="window.history.back()">Back</button>
 </body>
 </html>
