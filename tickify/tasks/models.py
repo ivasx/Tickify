@@ -15,17 +15,21 @@ class Priority(models.IntegerChoices):
 
 class CompletedManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(completed=True)
+        return super().get_queryset().filter(completed=Task.Status.COMPLETED)
 
 class UncompletedManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(completed=False)
+        return super().get_queryset().filter(completed=Task.Status.ACTIVE)
 
 class Task(models.Model):
+    class Status(models.IntegerChoices):
+        ACTIVE = 0, "Active"
+        COMPLETED = 1, "Completed"
+
     slug = models.SlugField(max_length=255, unique=True, db_index=True)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    completed = models.BooleanField(default=False)
+    completed = models.BooleanField(choices=Status.choices, default=Status.ACTIVE)
     priority = models.IntegerField(choices=Priority.choices, default=Priority.DEFAULT)
     deadline = models.DateTimeField(blank=True, null=True)
     category = models.CharField(max_length=255, blank=True, null=True)
