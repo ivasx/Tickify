@@ -46,10 +46,12 @@ def home(request):
     return render(request, "tasks/home.html", context=data)
 
 def tasks_list(request):
-    tasks = Task.objects.all()
+    completed_tasks = Task.completed_obj.all()
+    uncompleted_tasks = Task.uncompleted_obj.all()
     data = {
         'title': 'Tasks',
-        'tasks': tasks,
+        'completed_tasks': completed_tasks,
+        'uncompleted_tasks': uncompleted_tasks,
     }
     return render(request, "tasks/tasks_list.html", context=data)
 

@@ -13,6 +13,14 @@ class Priority(models.IntegerChoices):
     HIGH = 3, "High"
     CRITICAL = 4, "Critical"
 
+class CompletedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(completed=True)
+
+class UncompletedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(completed=False)
+
 class Task(models.Model):
     slug = models.SlugField(max_length=255, unique=True, db_index=True)
     title = models.CharField(max_length=255)
@@ -29,6 +37,10 @@ class Task(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     completed_at = models.DateTimeField(blank=True, null=True)
+
+    objects = models.Manager()
+    completed_obj= CompletedManager()
+    uncompleted_obj = UncompletedManager()
 
     def __str__(self):
         return f"{self.title}"

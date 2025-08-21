@@ -5,8 +5,7 @@
     <h1 class="section-title">Активні завдання</h1>
 
     <div class="tasks-grid">
-        {% for task in tasks %}
-        {% if not task.is_done %}
+        {% for task in uncompleted_tasks %}
         <div class="task-card">
             <h2 class="task-title">{{ task.title }}</h2>
             <p class="task-description">{{ task.description }}</p>
@@ -14,7 +13,6 @@
             <br>
             <a href="{{ task.get_absolute_url }}" class="task-link">Детальніше</a>
         </div>
-        {% endif %}
         {% empty %}
         <div class="empty-state">
             <h3>Поки що немає активних завдань</h3>
@@ -26,8 +24,7 @@
     <h1 class="section-title">Завершені завдання</h1>
 
     <div class="tasks-grid">
-        {% for task in tasks %}
-        {% if task.is_done %}
+        {% for task in completed_tasks %}
         <div class="task-card">
             <h2 class="task-title">{{ task.title }}</h2>
             <p class="task-description">{{ task.description }}</p>
@@ -35,23 +32,16 @@
             <br>
             <a href="{% url 'tasks_detail' task.id %}" class="task-link">Детальніше</a>
         </div>
-        {% endif %}
         {% endfor %}
 
-        <!-- Показуємо порожній стан тільки якщо немає завершених завдань -->
         {% if not tasks|length or not tasks %}
         <div class="empty-state">
             <h3>Поки що немає завершених завдань</h3>
             <p>Завершіть своє перше завдання, і воно з'явиться тут</p>
         </div>
 
-
-
-
         {% endif %}
     </div>
 </div>
-
-
 
 {% endblock %}
