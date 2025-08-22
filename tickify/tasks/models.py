@@ -32,7 +32,14 @@ class Task(models.Model):
     completed = models.BooleanField(choices=Status.choices, default=Status.ACTIVE)
     priority = models.IntegerField(choices=Priority.choices, default=Priority.DEFAULT)
     deadline = models.DateTimeField(blank=True, null=True)
-    category = models.CharField(max_length=255, blank=True, null=True)
+    category = models.ForeignKey(
+        'Category',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='tasks'
+
+    )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
@@ -58,6 +65,17 @@ class Task(models.Model):
     def get_absolute_url(self):
         return reverse('tasks_detail', kwargs={'task_slug': self.slug})
 
+class Category(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='categories'
+    )
+
+    def __str__(self):
+        return self.name
 
 class User(AbstractUser):
     pass
