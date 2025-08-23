@@ -9,5 +9,5 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('contact/', views.contact, name='contact'),
     path('add_task/', views.add_task, name='add_task'),
-
+    path('category/<slug:category_slug>/', views.show_category, name='category'),
 ]

@@ -5,6 +5,15 @@
     <h1 class="section-title">Активні завдання</h1>
 
     <div class="tasks-grid">
+        <div class="category-filter">
+            <label for="category-select">Фільтрувати за категорією:</label>
+            <select id="category-select" name="category" onchange="location = this.value;">
+                <option value="{% url 'tasks_list' %}">Всі категорії</option>
+                {% for category in categories %}
+                <option value="{% url 'show_category' category.slug %}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
         {% for task in uncompleted_tasks %}
         <div class="task-card">
             <h2 class="task-title">{{ task.title }}</h2>

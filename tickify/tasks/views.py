@@ -1,16 +1,9 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 
-from tasks.models import Task
+from tasks.models import Task, Category
 
 # Create your views here.
-tasks_db = [
-    {'id': 1, 'title': 'Завдання 1', 'description': 'Опис завдання 1', 'is_done': False},
-    {'id': 2, 'title': 'Завдання 2', 'description': 'Опис завдання 2', 'is_done': True},
-    {'id': 3, 'title': 'Завдання 3', 'description': 'Опис завдання 3', 'is_done': False},
-    {'id': 4, 'title': 'Завдання 4', 'description': 'Опис завдання 4', 'is_done': True},
-]
-
 menu = [{'title': 'Home', 'url': 'home'},
         {'title': 'Tasks', 'url': 'tasks_list'},
         {'title': 'Add Task', 'url': 'add_task'},
@@ -48,10 +41,12 @@ def home(request):
 def tasks_list(request):
     completed_tasks = Task.completed_obj.all()
     uncompleted_tasks = Task.uncompleted_obj.all()
+    categories = Category.objects.all()
     data = {
         'title': 'Tasks',
         'completed_tasks': completed_tasks,
         'uncompleted_tasks': uncompleted_tasks,
+        'categories': categories,
     }
     return render(request, "tasks/tasks_list.html", context=data)
 
@@ -75,4 +70,14 @@ def add_task(request):
     return render(request, "tasks/add_task.html", context={'title': 'Add Task'})
 
 
-
+def show_category(request, category_slug):
+    category = get_object_or_404(Category, slug=category_slug)
+    completed_tasks = Task.completed_obj.filter(category=category)
+    uncompleted_tasks = Task.uncompleted_obj.filter(category=category)
+    data = {
+        'title': category.name,
+        'completed_tasks': completed_tasks,
+        'uncompleted_tasks': uncompleted_tasks,
+        'category': category.pk
+    }
+    return render(request, "tasks/task_list.html", context=data)
