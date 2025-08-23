@@ -74,10 +74,12 @@ def show_category(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     completed_tasks = Task.completed_obj.filter(category=category)
     uncompleted_tasks = Task.uncompleted_obj.filter(category=category)
+    categories = Category.objects.all()
     data = {
         'title': category.name,
         'completed_tasks': completed_tasks,
         'uncompleted_tasks': uncompleted_tasks,
-        'category': category.pk
+        'categories': categories,
+        'current_category': category,
     }
-    return render(request, "tasks/task_list.html", context=data)
+    return render(request, "tasks/tasks_list.html", context=data)

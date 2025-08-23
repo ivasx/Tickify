@@ -236,3 +236,44 @@ ul {
 hr {
     display: none;
 }
+
+.category-filter {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding: 0 0 16px 0;
+    border-bottom: 1px solid #e5e7eb;
+    overflow: visible;
+}
+
+.category-filter label {
+    color: #1a1a1a;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.category-filter select {
+    padding: 6px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    color: #374151;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 200px;
+    line-height: 1.5;
+    vertical-align: middle;
+}
+
+.category-filter select:hover {
+    border-color: #9ca3af;
+}
+
+.category-filter select:focus {
+    outline: none;
+    border-color: #374151;
+    box-shadow: 0 0 0 3px rgba(55, 65, 81, 0.1);
+}

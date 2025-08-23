@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.template.defaultfilters import slugify
 from django.urls import reverse
 from tickify import settings
 
@@ -64,6 +65,17 @@ class Task(models.Model):
 
     def get_absolute_url(self):
         return reverse('tasks_detail', kwargs={'task_slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            num = 1
+            while Task.objects.filter(slug=slug).exists():
+                slug = f'{base_slug}-{num}'
+                num += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
