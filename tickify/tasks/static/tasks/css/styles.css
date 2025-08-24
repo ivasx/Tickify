@@ -277,3 +277,29 @@ hr {
     border-color: #374151;
     box-shadow: 0 0 0 3px rgba(55, 65, 81, 0.1);
 }
+
+.task-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.task-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 6px;
+    width: 100%;
+}
+
+.task-card.priority-0::before { background: #9ca3af; }
+.task-card.priority-1::before { background: #3b82f6; }
+.task-card.priority-2::before { background: #fbbf24; }
+.task-card.priority-3::before { background: #ef4444; }
+.task-card.priority-4::before { background: #7e22ce; }

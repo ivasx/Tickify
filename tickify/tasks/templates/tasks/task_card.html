@@ -1,0 +1,19 @@
+<div class="task-card priority-{{ task.priority }}">
+    <h2 class="task-title">{{ task.title }}</h2>
+    <p class="task-description">{{ task.description }}</p>
+
+    {% if not task.category %}
+        <span class="task-category">Без категорії</span>
+    {% else %}
+        <span class="task-category">{{ task.category.name }}</span>
+    {% endif %}
+
+    {% if task.is_completed %}
+        <span class="task-status status-completed">Завершено</span>
+    {% else %}
+        <span class="task-status status-pending">В процесі</span>
+    {% endif %}
+
+    <br>
+    <a href="{{ task.get_absolute_url }}" class="task-link">Детальніше</a>
+</div>

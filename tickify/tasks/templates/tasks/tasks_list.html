@@ -7,27 +7,27 @@
     <div class="category-filter">
         <label for="category-select">Фільтрувати за категорією:</label>
         <select id="category-select" name="category" onchange="location = this.value;">
-            <option value="{% url 'tasks_list' %}" {% if not current_category %}selected{% endif %}>Всі категорії</option>
+            <option value="{% url 'tasks_list' %}"
+                    {% if not current_category %}selected{% endif %}>
+                Всі категорії
+            </option>
             {% for category in categories %}
-            <option value="{% url 'category' category.slug %}" {% if current_category and category.slug == current_category.slug %}selected{% endif %}>{{ category.name }}</option>
+                <option value="{% url 'category' category.slug %}"
+                        {% if current_category and category.slug == current_category.slug %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
             {% endfor %}
         </select>
     </div>
 
     <div class="tasks-grid">
         {% for task in uncompleted_tasks %}
-        <div class="task-card">
-            <h2 class="task-title">{{ task.title }}</h2>
-            <p class="task-description">{{ task.description }}</p>
-            <span class="task-status status-pending">В процесі</span>
-            <br>
-            <a href="{{ task.get_absolute_url }}" class="task-link">Детальніше</a>
-        </div>
+            {% include "tasks/task_card.html" with task=task %}
         {% empty %}
-        <div class="empty-state">
-            <h3>Поки що немає активних завдань</h3>
-            <p>Створіть своє перше завдання!</p>
-        </div>
+            <div class="empty-state">
+                <h3>Поки що немає активних завдань</h3>
+                <p>Створіть своє перше завдання!</p>
+            </div>
         {% endfor %}
     </div>
 
@@ -35,18 +35,12 @@
 
     <div class="tasks-grid">
         {% for task in completed_tasks %}
-        <div class="task-card">
-            <h2 class="task-title">{{ task.title }}</h2>
-            <p class="task-description">{{ task.description }}</p>
-            <span class="task-status status-completed">Завершено</span>
-            <br>
-            <a href="{{ task.get_absolute_url }}" class="task-link">Детальніше</a>
-        </div>
+            {% include "tasks/task_card.html" with task=task %}
         {% empty %}
-        <div class="empty-state">
-            <h3>Поки що немає завершених завдань</h3>
-            <p>Завершіть своє перше завдання, і воно з'явиться тут</p>
-        </div>
+            <div class="empty-state">
+                <h3>Поки що немає завершених завдань</h3>
+                <p>Завершіть своє перше завдання, і воно з'явиться тут</p>
+            </div>
         {% endfor %}
     </div>
 </div>

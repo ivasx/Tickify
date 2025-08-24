@@ -5,9 +5,10 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('tasks/', views.tasks_list, name='tasks_list'),
     path('tasks/<slug:task_slug>/', views.tasks_detail, name='tasks_detail'),
+path('tasks/category/<slug:category_slug>/', views.show_category, name='category'),
     path('register/', views.register, name='register'),
     path('login/', views.login, name='login'),
     path('contact/', views.contact, name='contact'),
     path('add_task/', views.add_task, name='add_task'),
-    path('category/<slug:category_slug>/', views.show_category, name='category'),
+
 ]
