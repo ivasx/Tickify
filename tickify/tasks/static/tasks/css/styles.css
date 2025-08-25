@@ -298,8 +298,8 @@ hr {
     width: 100%;
 }
 
-.task-card.priority-0::before { background: #9ca3af; }
-.task-card.priority-1::before { background: #3b82f6; }
-.task-card.priority-2::before { background: #fbbf24; }
-.task-card.priority-3::before { background: #ef4444; }
-.task-card.priority-4::before { background: #7e22ce; }
+.task-card.priority-0::before { background: #61c309; }
+.task-card.priority-1::before { background: #f0f63b; }
+.task-card.priority-2::before { background: #ec551f; }
+.task-card.priority-3::before { background: #bc0000; }
+.task-card.priority-4::before { background: #000000; }
