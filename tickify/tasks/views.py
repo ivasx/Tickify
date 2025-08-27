@@ -64,7 +64,7 @@ def page_not_found(request, exception):
     return HttpResponseNotFound("<h1>Сторінка не знайдена.</h1>")
 
 def contact(request):
-    return HttpResponse("Контактові дані.")
+    return render(request, "tasks/contacts.html")
 
 def add_task(request):
     return render(request, "tasks/add_task.html", context={'title': 'Add Task'})
