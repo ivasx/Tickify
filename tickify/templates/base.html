@@ -11,8 +11,12 @@
 <body>
 {% include 'header.html' %}
 
-{% block content %} {% endblock %}
+<main>
+    {% block content %} {% endblock %}
+</main>
+
 
 <button class="button" onclick="window.history.back()">Back</button>
+{% include 'footer.html' %}
 </body>
 </html>
