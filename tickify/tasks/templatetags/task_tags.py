@@ -1,5 +1,6 @@
 from django import template
 import tasks.views as views
+from tasks.models import Category
 
 register = template.Library()
 
@@ -12,3 +13,8 @@ def get_task_list():
 def show_tasks():
     tasks = views.tasks_db
     return {'tasks': tasks}
+
+@register.simple_tag
+def get_tasks_count(category):
+    count_tasks = category.tasks.filter(completed=0).count()
+    return count_tasks

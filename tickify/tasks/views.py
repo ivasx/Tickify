@@ -31,9 +31,11 @@ def login(request):
             return redirect('home')
 
 def home(request):
+    categories = Category.objects.all()
     data = {
         'title': 'Tickify',
         'menu': menu,
+        'categories': categories
     }
 
     return render(request, "tasks/home.html", context=data)

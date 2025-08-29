@@ -2,6 +2,18 @@
 {% block content %}
 
 <h1>Hello, {{ user.username }}!</h1>
+<h2>Ваші категорії</h2>
+
+<div class="tasks-grid">
+    {% for category in categories %}
+    {% include "tasks/category_card.html" with category=category %}
+    {% empty %}
+    <div class="empty-state">
+        <h3>Поки що немає активних завдань</h3>
+        <p>Створіть своє перше завдання!</p>
+    </div>
+    {% endfor %}
+</div>
 <ul>
     {% for item in menu %}
     <li>

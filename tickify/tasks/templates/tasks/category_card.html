@@ -1,0 +1,6 @@
+{% load task_tags %}
+
+<div class="task-card priority-{{ task.priority }}">
+    <h2 class="task-title">{{ category.name }}</h2>
+    <p>Незавершених задач: {% get_tasks_count category %}</p>
+</div>
