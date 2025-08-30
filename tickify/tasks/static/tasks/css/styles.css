@@ -310,3 +310,9 @@ hr {
 .task-card.priority-4::before {
     background: #000000;
 }
+
+.nav-buttons-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}

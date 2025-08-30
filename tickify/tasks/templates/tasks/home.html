@@ -1,25 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Hello, {{ user.username }}!</h1>
-<h2>Ваші категорії</h2>
 
-<div class="tasks-grid">
-    {% for category in categories %}
-    {% include "tasks/category_card.html" with category=category %}
-    {% empty %}
-    <div class="empty-state">
-        <h3>Поки що немає активних завдань</h3>
-        <p>Створіть своє перше завдання!</p>
+<div class="content">
+    <h1 class="section-title">Hello, {{ user.username }}! Ваші категорії</h1>
+    <div class="tasks-grid">
+        {% for category in categories %}
+        {% include "tasks/category_card.html" with category=category %}
+        {% empty %}
+        <div class="empty-state">
+            <h3>Поки що немає активних завдань</h3>
+            <p>Створіть своє перше завдання!</p>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+    <div class="nav-buttons-container">
+        {% for item in menu %}
+        <a class="button" href="{% url item.url %}">{{ item.title }}</a>
+        {% endfor %}
+    </div>
 </div>
-<ul>
-    {% for item in menu %}
-    <li>
-        <a href="{% url item.url %}">{{ item.title }}</a>
-    </li>
-    {% endfor %}
-</ul>
-
 {% endblock %}
