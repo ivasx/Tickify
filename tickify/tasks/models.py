@@ -30,7 +30,7 @@ class Task(models.Model):
     slug = models.SlugField(max_length=255, unique=True, db_index=True)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    completed = models.BooleanField(choices=Status.choices, default=Status.ACTIVE)
+    completed = models.IntegerField(choices=Status.choices, default=Status.ACTIVE)
     priority = models.IntegerField(choices=Priority.choices, default=Priority.DEFAULT)
     deadline = models.DateTimeField(blank=True, null=True)
     category = models.ForeignKey(

@@ -1,6 +1,6 @@
 from django import template
 import tasks.views as views
-from tasks.models import Category
+from tasks.models import Category, Task
 
 register = template.Library()
 
@@ -16,5 +16,5 @@ def show_tasks():
 
 @register.simple_tag
 def get_tasks_count(category):
-    count_tasks = category.tasks.filter(completed=0).count()
+    count_tasks = category.tasks.filter(completed=Task.Status.ACTIVE).count()
     return count_tasks
