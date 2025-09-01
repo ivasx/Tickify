@@ -77,6 +77,10 @@ class Task(models.Model):
             self.slug = slug
         super().save(*args, **kwargs)
 
+    def is_completed(self):
+        return self.completed == self.Status.COMPLETED
+
+
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=255, unique=True, db_index=True)

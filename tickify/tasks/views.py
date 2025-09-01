@@ -41,9 +41,9 @@ def home(request):
     return render(request, "tasks/home.html", context=data)
 
 def tasks_list(request):
-    completed_tasks = Task.completed_obj.all()
-    uncompleted_tasks = Task.uncompleted_obj.all()
-    categories = Category.objects.all()
+    completed_tasks = Task.completed_obj.filter(user=request.user)
+    uncompleted_tasks = Task.uncompleted_obj.filter(user=request.user)
+    categories = Category.objects.filter(user=request.user)
     data = {
         'title': 'Tasks',
         'completed_tasks': completed_tasks,
