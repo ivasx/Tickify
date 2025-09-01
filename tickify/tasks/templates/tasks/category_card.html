@@ -1,8 +1,8 @@
 {% load task_tags %}
 
-<a href="{% url 'category' category.slug %}">
-    <div class="text-card priority-{{ task.priority }}">
-        <h2 class="category-text">{{ category.name }}</h2>
-        <p class="category-text">  Незавершених задач: {% get_tasks_count category %}</p>
+<a href="{% url 'category' category.slug %}" class="category-link">
+    <div class="category-card">
+        <h2 class="task-title">{{ category.name }}</h2>
+        <p class="task-description">Незавершених задач: {% get_tasks_count category %}</p>
     </div>
 </a>
