@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseNotFound
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from tasks.models import Task, Category
 
@@ -41,16 +41,19 @@ def home(request):
     return render(request, "tasks/home.html", context=data)
 
 def tasks_list(request):
-    completed_tasks = Task.completed_obj.filter(user=request.user)
-    uncompleted_tasks = Task.uncompleted_obj.filter(user=request.user)
-    categories = Category.objects.filter(user=request.user)
-    data = {
-        'title': 'Tasks',
-        'completed_tasks': completed_tasks,
-        'uncompleted_tasks': uncompleted_tasks,
-        'categories': categories,
-    }
-    return render(request, "tasks/tasks_list.html", context=data)
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        completed_tasks = Task.completed_obj.filter(user=request.user)
+        uncompleted_tasks = Task.uncompleted_obj.filter(user=request.user)
+        categories = Category.objects.filter(user=request.user)
+        data = {
+            'title': 'Tasks',
+            'completed_tasks': completed_tasks,
+            'uncompleted_tasks': uncompleted_tasks,
+            'categories': categories,
+        }
+        return render(request, "tasks/tasks_list.html", context=data)
 
 def tasks_detail(request, task_slug):
     task = get_object_or_404(Task,slug=task_slug)
