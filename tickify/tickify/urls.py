@@ -27,3 +27,5 @@ urlpatterns = [
 ]
 
 handler404 = page_not_found
+
+admin.site.site_header = "Tickify | Панель адміністрування"
