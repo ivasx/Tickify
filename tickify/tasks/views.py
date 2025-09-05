@@ -31,7 +31,7 @@ def login(request):
             return redirect('home')
 
 def home(request):
-    categories = Category.objects.all()
+    categories = Category.objects.filter(user=request.user)
     data = {
         'title': 'Tickify',
         'menu': menu,
