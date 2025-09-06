@@ -90,7 +90,7 @@ class Task(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255, unique=True, verbose_name='Назва категорії')
+    name = models.CharField(max_length=255, verbose_name='Назва категорії')
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Слаг')
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

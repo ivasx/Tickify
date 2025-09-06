@@ -1,4 +1,5 @@
 from django.contrib import admin, messages
+from django.http import request
 
 from tasks.models import Task, Category
 
@@ -17,15 +18,32 @@ class PriorityFilter(admin.SimpleListFilter):
         )
 
     def queryset(self, request, queryset):
-        if self.value:
+        if self.value():
             return queryset.filter(priority=self.value())
         return queryset
 
+from django import forms
+
+class TaskAdminForm(forms.ModelForm):
+    '''
+    Метод для відображення тільки категорій, які відповідають власнику завдання.
+    '''
+    class Meta:
+        model = Task
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Limit category choices to the current user
+        if self.instance and self.instance.user:
+            self.fields['category'].queryset = Category.objects.filter(user=self.instance.user)
+
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
+    form = TaskAdminForm
     list_display = ('title', 'description', 'completed', 'category', 'user', 'updated_at', 'brief_info')
     list_display_links = ('title',)
-    list_editable = ('completed', 'category')
+    list_editable = ('completed',)  # Only editable model fields
     list_per_page = 5
     actions = ['set_completed', 'set_active']
     search_fields = ('title', 'category__name')
