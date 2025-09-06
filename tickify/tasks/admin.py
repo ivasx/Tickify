@@ -1,6 +1,7 @@
 from django.contrib import admin, messages
+from django.core.exceptions import ValidationError
 from django.http import request
-
+from tasks.forms import TaskAdminForm
 from tasks.models import Task, Category
 
 # Register your models here.
@@ -22,28 +23,16 @@ class PriorityFilter(admin.SimpleListFilter):
             return queryset.filter(priority=self.value())
         return queryset
 
-from django import forms
-
-class TaskAdminForm(forms.ModelForm):
-    '''
-    Метод для відображення тільки категорій, які відповідають власнику завдання.
-    '''
-    class Meta:
-        model = Task
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Limit category choices to the current user
-        if self.instance and self.instance.user:
-            self.fields['category'].queryset = Category.objects.filter(user=self.instance.user)
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     form = TaskAdminForm
+    fields = ['title', 'slug', 'description', 'completed', 'priority', 'deadline', 'category', 'user', 'created_at', 'updated_at', 'completed_at',]
+
     list_display = ('title', 'description', 'completed', 'category', 'user', 'updated_at', 'brief_info')
     list_display_links = ('title',)
-    list_editable = ('completed',)  # Only editable model fields
+    readonly_fields = ('slug', 'created_at', 'updated_at', 'completed_at',)
+    list_editable = ('completed',)
     list_per_page = 5
     actions = ['set_completed', 'set_active']
     search_fields = ('title', 'category__name')
@@ -62,6 +51,11 @@ class TaskAdmin(admin.ModelAdmin):
     def set_active(self, request, queryset):
         queryset.update(completed=False)
         self.message_user(request, f'{queryset.count()} задачі позначено як невиконані', messages.WARNING)
+
+    def save_model(self, request, obj, form, change):
+        if obj.category and obj.category.user != obj.user:
+            raise ValidationError("Категорія не належить цьому користувачу.")
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(Category)

@@ -1,7 +1,9 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
-from django.template.defaultfilters import slugify
+from slugify import slugify
 from django.urls import reverse
+
 from tickify import settings
 
 
@@ -13,13 +15,16 @@ class Priority(models.IntegerChoices):
     HIGH = 3, "High"
     CRITICAL = 4, "Critical"
 
+
 class CompletedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(completed=True)
 
+
 class UncompletedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(completed=False)
+
 
 class Task(models.Model):
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Слаг')
@@ -68,6 +73,11 @@ class Task(models.Model):
     def get_absolute_url(self):
         return reverse('tasks_detail', kwargs={'task_slug': self.slug})
 
+    def clean(self):
+        if self.category and self.category.user != self.user:
+            raise ValidationError('Завдання не може бути в категорії другого користувача')
+
+
     def save(self, *args, **kwargs):
         if self.completed and not self.completed_at:
             from django.utils import timezone
@@ -83,6 +93,8 @@ class Task(models.Model):
                 slug = f'{base_slug}-{num}'
                 num += 1
             self.slug = slug
+
+
         super().save(*args, **kwargs)
 
     def is_completed(self):
@@ -117,6 +129,7 @@ class Category(models.Model):
                 num += 1
             self.slug = slug
         super().save(*args, **kwargs)
+
 
 class User(AbstractUser):
     pass
