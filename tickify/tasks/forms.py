@@ -17,3 +17,10 @@ class TaskAdminForm(forms.ModelForm):
             self.fields['category'].queryset = Category.objects.filter(user=self.instance.user)
         else:
             self.fields['category'].queryset = Category.objects.none()
+
+
+class AddTaskForm(forms.Form):
+    title = forms.CharField(max_length=255)
+    description = forms.CharField(widget=forms.Textarea, required=False)
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False)
+    deadline = forms.DateField(required=False)

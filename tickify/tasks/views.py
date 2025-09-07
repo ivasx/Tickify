@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 
+from tasks.forms import AddTaskForm
 from tasks.models import Task, Category
 
 # Create your views here.
@@ -72,7 +73,18 @@ def contact(request):
     return render(request, "tasks/contacts.html")
 
 def add_task(request):
-    return render(request, "tasks/add_task.html", context={'title': 'Add Task'})
+    if request.method == 'POST':
+        form = AddTaskForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+    else:
+        form = AddTaskForm()
+
+    data = {
+        'title': 'Add Task',
+        'form': form,
+    }
+    return render(request, "tasks/add_task.html", context=data)
 
 
 def show_category(request, category_slug):
