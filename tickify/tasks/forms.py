@@ -20,7 +20,18 @@ class TaskAdminForm(forms.ModelForm):
 
 
 class AddTaskForm(forms.Form):
-    title = forms.CharField(max_length=255)
-    description = forms.CharField(widget=forms.Textarea, required=False)
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False)
-    deadline = forms.DateField(required=False)
+    # class Meta:
+    #     model = Task
+    #     fields = '__all__'
+    #
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     if self.user:
+    #         self.fields['category'].queryset = Category.objects.filter(user=self.user)
+    #         self.fields['category'].empty_label = "Без категорії"
+    #     else:
+    #         self.fields['category'].queryset = Category.objects.none()
+    title = forms.CharField(max_length=255, label="Назва:")
+    description = forms.CharField(widget=forms.Textarea, required=False, label="Опис:")
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False, empty_label="Без категорії", label="Категорія:")
+    deadline = forms.DateField(required=False, label="Дедлайн:")
