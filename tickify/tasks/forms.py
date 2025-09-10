@@ -20,18 +20,37 @@ class TaskAdminForm(forms.ModelForm):
 
 
 class AddTaskForm(forms.Form):
-    # class Meta:
-    #     model = Task
-    #     fields = '__all__'
-    #
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     if self.user:
-    #         self.fields['category'].queryset = Category.objects.filter(user=self.user)
-    #         self.fields['category'].empty_label = "Без категорії"
-    #     else:
-    #         self.fields['category'].queryset = Category.objects.none()
-    title = forms.CharField(max_length=255, label="Назва:")
-    description = forms.CharField(widget=forms.Textarea, required=False, label="Опис:")
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False, empty_label="Без категорії", label="Категорія:")
-    deadline = forms.DateField(required=False, label="Дедлайн:")
+    title = forms.CharField(
+        max_length=255,
+        label="Назва:",
+        widget=forms.TextInput(attrs={
+            "class": "form-input",
+            "placeholder": "Введіть назву задачі"
+        })
+    )
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={
+            "class": "form-input",
+            "placeholder": "Опишіть задачу",
+            "rows": 4
+        }),
+        required=False,
+        label="Опис:"
+    )
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        required=False,
+        empty_label="Без категорії",
+        label="Категорія:",
+        widget=forms.Select(attrs={
+            "class": "form-input"
+        })
+    )
+    deadline = forms.DateField(
+        required=False,
+        label="Дедлайн:",
+        widget=forms.DateInput(attrs={
+            "class": "form-input",
+            "type": "date"
+        })
+    )
