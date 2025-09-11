@@ -26,7 +26,11 @@ class AddTaskForm(forms.Form):
         widget=forms.TextInput(attrs={
             "class": "form-input",
             "placeholder": "Введіть назву задачі"
-        })
+        }),
+        error_messages={
+            "required": "Кожному завданню потрібна назва",
+            "max_length": "Ого-го! Назва задачі може бути не більше 255 символів."
+        }
     )
     description = forms.CharField(
         widget=forms.Textarea(attrs={
