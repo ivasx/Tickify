@@ -9,11 +9,11 @@ from tickify import settings
 
 # Create your models here.
 class Priority(models.IntegerChoices):
-    DEFAULT = 0, "Default"
-    LOW = 1, "Low"
-    MEDIUM = 2, "Medium"
-    HIGH = 3, "High"
-    CRITICAL = 4, "Critical"
+    DEFAULT = 0, "Звичайний"
+    LOW = 1, "Низький"
+    MEDIUM = 2, "Середній"
+    HIGH = 3, "Високий"
+    CRITICAL = 4, "Критичний"
 
 
 class CompletedManager(models.Manager):

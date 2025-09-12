@@ -107,15 +107,14 @@ def contact(request):
 
 def add_task(request):
     if request.method == 'POST':
-        form = AddTaskForm(request.POST)
+        form = AddTaskForm(request.POST, user=request.user)
         if form.is_valid():
-            try:
-                Task.objects.create(**form.cleaned_data, user=request.user)
-                return redirect('tasks_list')
-            except:
-                form.add_error(None, "Не вдалось додати задачу")
+            task = form.save(commit=False)
+            task.user = request.user
+            task.save()
+            return redirect('tasks_list')
     else:
-        form = AddTaskForm()
+        form = AddTaskForm(user=request.user)
 
     data = {
         'title': 'Add Task',

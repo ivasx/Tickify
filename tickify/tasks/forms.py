@@ -1,4 +1,5 @@
 from django import forms
+
 from tasks.models import Task, Category
 
 
@@ -19,42 +20,41 @@ class TaskAdminForm(forms.ModelForm):
             self.fields['category'].queryset = Category.objects.none()
 
 
-class AddTaskForm(forms.Form):
-    title = forms.CharField(
-        max_length=255,
-        label="Назва:",
-        widget=forms.TextInput(attrs={
-            "class": "form-input",
-            "placeholder": "Введіть назву задачі"
-        }),
-        error_messages={
-            "required": "Кожному завданню потрібна назва",
-            "max_length": "Ого-го! Назва задачі може бути не більше 255 символів."
-        }
-    )
-    description = forms.CharField(
-        widget=forms.Textarea(attrs={
-            "class": "form-input",
-            "placeholder": "Опишіть задачу",
-            "rows": 4
-        }),
-        required=False,
-        label="Опис:"
-    )
+class AddTaskForm(forms.ModelForm):
     category = forms.ModelChoiceField(
-        queryset=Category.objects.all(),
+        queryset=Category.objects.none(),
         required=False,
         empty_label="Без категорії",
-        label="Категорія:",
-        widget=forms.Select(attrs={
-            "class": "form-input"
-        })
     )
-    deadline = forms.DateField(
-        required=False,
-        label="Дедлайн:",
-        widget=forms.DateInput(attrs={
-            "class": "form-input",
-            "type": "date"
-        })
-    )
+
+    class Meta:
+        model = Task
+        fields = ['title', 'description', 'priority', 'category', 'deadline']
+        widgets = {
+            'title': forms.TextInput(attrs={"class": "form-input","placeholder": "Введіть назву задачі"}),
+            'description': forms.Textarea(attrs={"class": "form-input","placeholder": "Опишіть задачу","rows": 4}),
+            'priority': forms.Select(attrs={"class": "form-input"}),
+            'deadline': forms.DateInput(attrs={"class": "form-input","type": "date"}),
+        }
+        labels = {
+            'title': 'Назва задачі:',
+            'description': 'Опис:',
+            'category': 'Категорія:',
+            'deadline': 'Дедлайн:',
+        }
+
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['category'].queryset = Category.objects.filter(user=user)
+
+        # Додавання стилю для вибору категорії
+        self.fields['category'].widget.attrs.update({"class": "form-input"})
+
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        if len(title) > 250:
+            raise forms.ValidationError("Ого-го! Назва задачі може бути не більше 250 символів.")
+        return title
