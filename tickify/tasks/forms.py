@@ -58,3 +58,6 @@ class AddTaskForm(forms.ModelForm):
         if len(title) > 250:
             raise forms.ValidationError("Ого-го! Назва задачі може бути не більше 250 символів.")
         return title
+
+class UploadFileForm(forms.Form):
+    file = forms.FileField(label="Файл")

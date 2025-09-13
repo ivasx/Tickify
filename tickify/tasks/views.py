@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 
-from tasks.forms import AddTaskForm
+from tasks.forms import AddTaskForm, UploadFileForm
 from tasks.models import Task, Category
 
 # Create your views here.
@@ -100,9 +100,21 @@ def tasks_detail(request, task_slug):
 def page_not_found(request, exception):
     return HttpResponseNotFound("<h1>Сторінка не знайдена.</h1>")
 
+def handle_uploaded_file(f):
+    with open(f'uploads/{f.name}', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 def contact(request):
-    return render(request, "tasks/contacts.html")
+    if request.method == 'POST':
+        # handle_uploaded_file(request.FILES['file_upload'])
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(form.cleaned_data['file'])
+    else:
+        form = UploadFileForm()
+    return render(request, "tasks/contacts.html",
+                  {'form': form})
 
 
 def add_task(request):
