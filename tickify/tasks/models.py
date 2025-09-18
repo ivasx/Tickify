@@ -50,6 +50,7 @@ class Task(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Користувач'
     )
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', default=None, blank=True, null=True, verbose_name='Фото')
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата створення')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата оновлення')
@@ -133,3 +134,7 @@ class Category(models.Model):
 
 class User(AbstractUser):
     pass
+
+
+class UploadFile(models.Model):
+    file = models.FileField(upload_to='uploads')

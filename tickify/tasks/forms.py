@@ -29,7 +29,7 @@ class AddTaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ['title', 'description', 'priority', 'category', 'deadline']
+        fields = ['title', 'description', 'priority', 'category', 'deadline', 'photo']
         widgets = {
             'title': forms.TextInput(attrs={"class": "form-input","placeholder": "Введіть назву задачі"}),
             'description': forms.Textarea(attrs={"class": "form-input","placeholder": "Опишіть задачу","rows": 4}),

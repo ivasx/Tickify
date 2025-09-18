@@ -1,6 +1,8 @@
 from django.contrib import admin, messages
 from django.core.exceptions import ValidationError
 from django.http import request
+from django.utils.safestring import mark_safe
+
 from tasks.forms import TaskAdminForm
 from tasks.models import Task, Category
 
@@ -27,20 +29,21 @@ class PriorityFilter(admin.SimpleListFilter):
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     form = TaskAdminForm
-    fields = ['title', 'slug', 'description', 'completed', 'priority', 'deadline', 'category', 'user', 'created_at', 'updated_at', 'completed_at',]
+    fields = ['title', 'slug', 'description', 'completed', 'priority', 'photo','task_photo','deadline', 'category', 'user', 'created_at', 'updated_at', 'completed_at',]
 
-    list_display = ('title', 'description', 'completed', 'category', 'user', 'updated_at', 'brief_info')
+    list_display = ('title', 'task_photo','description', 'completed', 'category', 'user', 'updated_at',)
     list_display_links = ('title',)
-    readonly_fields = ('slug', 'created_at', 'updated_at', 'completed_at',)
+    readonly_fields = ('slug', 'task_photo', 'created_at', 'updated_at', 'completed_at',)
     list_editable = ('completed',)
     list_per_page = 5
     actions = ['set_completed', 'set_active']
     search_fields = ('title', 'category__name')
     list_filter = ('completed', 'category', PriorityFilter)
+    save_on_top = True
 
-    @admin.display(description='Кількість символів')
-    def brief_info(self, task: Task):
-        return f'{len(task.description)} символів'
+    @admin.display(description='Фото завдання')
+    def task_photo(self, task: Task):
+        return mark_safe(f'<img src="{task.photo.url}" width="50" height="50">') if task.photo else 'Без фото'
 
     @admin.action(description='Позначити виконаним')
     def set_completed(self, request, queryset):

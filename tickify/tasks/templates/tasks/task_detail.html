@@ -7,4 +7,8 @@
 
 <p>{{ task.user }}</p>
 
+{% if task.photo %}
+<img src="{{ task.photo.url }}" alt="">
+{% endif %}}}
+
 {% endblock%}
