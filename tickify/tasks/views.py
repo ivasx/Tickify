@@ -1,9 +1,7 @@
-from webbrowser import parse_args
-
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 
 from tasks.forms import AddTaskForm, UploadFileForm
 from tasks.models import Task, Category, UploadFile
@@ -43,51 +41,70 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        user = self.request.user
         context['title'] = 'Tickify'
         context['menu'] = menu
-        context['categories'] = Category.objects.filter(user=self.request.user)
+        context['categories'] = Category.objects.filter(user=user)
         return context
 
-def tasks_list(request, category_slug=None):
-    if not request.user.is_authenticated:
-        return redirect('login')
+class TaskListView(ListView):
+    model = Task
+    template_name = "tasks/tasks_list.html"
+    context_object_name = 'tasks'
 
-    categories = Category.objects.filter(user=request.user)
-    current_category = None
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect("login")
+        return super().dispatch(request, *args, **kwargs)
 
-    if category_slug:
-        current_category = get_object_or_404(Category, slug=category_slug, user=request.user)
-        completed_tasks = Task.completed_obj.filter(user=request.user, category=current_category)
-        uncompleted_tasks = Task.uncompleted_obj.filter(user=request.user, category=current_category)
-    else:
-        completed_tasks = Task.completed_obj.filter(user=request.user)
-        uncompleted_tasks = Task.uncompleted_obj.filter(user=request.user)
+    def get_queryset(self):
+        category_slug = self.kwargs.get("category_slug")
+        user = self.request.user
 
-    data = {
-        'title': 'Tasks',
-        'completed_tasks': completed_tasks,
-        'uncompleted_tasks': uncompleted_tasks,
-        'categories': categories,
-        'current_category': current_category,
-    }
+        if category_slug:
+            category = get_object_or_404(Category, slug=category_slug, user=user)
+            self.current_category = category
+            return Task.objects.filter(user=user, category=category)
+        else:
+            self.current_category = None
+            return Task.objects.filter(user=user)
 
-    return render(request, "tasks/tasks_list.html", context=data)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        context["title"] = "Tasks"
+        context["categories"] = Category.objects.filter(user=user)
+        context["current_category"] = self.current_category
+        context["completed_tasks"] = self.get_queryset().filter(completed=True)
+        context["uncompleted_tasks"] = self.get_queryset().filter(completed=False)
+        return context
 
 
-def show_category(request, category_slug):
-    category = get_object_or_404(Category, slug=category_slug)
-    completed_tasks = Task.completed_obj.filter(category=category)
-    uncompleted_tasks = Task.uncompleted_obj.filter(category=category)
-    categories = Category.objects.all()
-    data = {
-        'title': category.name,
-        'completed_tasks': completed_tasks,
-        'uncompleted_tasks': uncompleted_tasks,
-        'categories': categories,
-        'current_category': category,
-    }
-    return render(request, "tasks/tasks_list.html", context=data)
 
+class TaskCategoryView(ListView):
+    model = Task
+    template_name = "tasks/tasks_list.html"
+    context_object_name = 'tasks'
+
+    def get_queryset(self):
+        category_slug = self.kwargs.get("category_slug")
+        user = self.request.user
+
+        self.current_category = get_object_or_404(Category, slug=category_slug, user=user)
+
+        return Task.objects.filter(user=user, category=self.current_category)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        context['title'] = self.current_category.name
+        context['categories'] = Category.objects.filter(user=user)
+        context['current_category'] = self.current_category
+        context['completed_tasks'] = self.get_queryset().filter(completed=True)
+        context['uncompleted_tasks'] = self.get_queryset().filter(completed=False)
+        return context
 
 def tasks_detail(request, task_slug):
     task = get_object_or_404(Task, slug=task_slug)
@@ -107,23 +124,6 @@ def contact(request):
 
     return render(request, "tasks/contacts.html",)
 
-
-def add_task(request):
-    if request.method == 'POST':
-        form = AddTaskForm(request.POST, request.FILES, user=request.user)
-        if form.is_valid():
-            task = form.save(commit=False)
-            task.user = request.user
-            task.save()
-            return redirect('tasks_list')
-    else:
-        form = AddTaskForm(user=request.user)
-
-    data = {
-        'title': 'Add Task',
-        'form': form,
-    }
-    return render(request, "tasks/add_task.html", context=data)
 
 class AddTaskView(View):
     def get(self, request):
