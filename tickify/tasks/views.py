@@ -1,8 +1,12 @@
+from webbrowser import parse_args
+
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
+from django.views.generic import TemplateView
 
 from tasks.forms import AddTaskForm, UploadFileForm
-from tasks.models import Task, Category
+from tasks.models import Task, Category, UploadFile
 
 # Create your views here.
 menu = [{'title': 'Home', 'url': 'home'},
@@ -34,16 +38,15 @@ def login(request):
             return redirect('home')
 
 
-def home(request):
-    categories = Category.objects.filter(user=request.user)
-    data = {
-        'title': 'Tickify',
-        'menu': menu,
-        'categories': categories
-    }
+class HomeView(TemplateView):
+    template_name = "tasks/home.html"
 
-    return render(request, "tasks/home.html", context=data)
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Tickify'
+        context['menu'] = menu
+        context['categories'] = Category.objects.filter(user=self.request.user)
+        return context
 
 def tasks_list(request, category_slug=None):
     if not request.user.is_authenticated:
@@ -100,26 +103,14 @@ def tasks_detail(request, task_slug):
 def page_not_found(request, exception):
     return HttpResponseNotFound("<h1>Сторінка не знайдена.</h1>")
 
-def handle_uploaded_file(f):
-    with open(f'uploads/{f.name}', 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-
 def contact(request):
-    if request.method == 'POST':
-        # handle_uploaded_file(request.FILES['file_upload'])
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            handle_uploaded_file(form.cleaned_data['file'])
-    else:
-        form = UploadFileForm()
-    return render(request, "tasks/contacts.html",
-                  {'form': form})
+
+    return render(request, "tasks/contacts.html",)
 
 
 def add_task(request):
     if request.method == 'POST':
-        form = AddTaskForm(request.POST, user=request.user)
+        form = AddTaskForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             task = form.save(commit=False)
             task.user = request.user
@@ -133,3 +124,26 @@ def add_task(request):
         'form': form,
     }
     return render(request, "tasks/add_task.html", context=data)
+
+class AddTaskView(View):
+    def get(self, request):
+        form = AddTaskForm(user=request.user)
+        data = {
+            'title': 'Add Task',
+            'form': form,
+        }
+        return render(request, "tasks/add_task.html", context=data)
+
+    def post(self, request):
+        form = AddTaskForm(request.POST, request.FILES, user=request.user)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.user = request.user
+            task.save()
+            return redirect('tasks_list')
+
+        data = {
+            'title': 'Add Task',
+            'form': form,
+        }
+        return render(request, "tasks/add_task.html", context=data)
