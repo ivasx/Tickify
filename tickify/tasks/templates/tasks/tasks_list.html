@@ -2,8 +2,9 @@
 {% block content %}
 
 <div class="content">
-    <h1 class="section-title">Активні завдання</h1>
+    <h1 class="section-title">Завдання</h1>
 
+    <!-- Фільтр за категоріями -->
     <div class="category-filter">
         <label for="category-select">Фільтрувати за категорією:</label>
         <select id="category-select" name="category" onchange="location = this.value;">
@@ -20,9 +21,13 @@
         </select>
     </div>
 
+    <!-- Активні завдання -->
+    <h2 class="section-subtitle">Активні завдання</h2>
     <div class="tasks-grid">
-        {% for task in uncompleted_tasks %}
-            {% include "tasks/task_card.html" with task=task %}
+        {% for task in tasks %}
+            {% if not task.completed %}
+                {% include "tasks/task_card.html" with task=task %}
+            {% endif %}
         {% empty %}
             <div class="empty-state">
                 <h3>Поки що немає активних завдань</h3>
@@ -31,11 +36,13 @@
         {% endfor %}
     </div>
 
-    <h1 class="section-title">Завершені завдання</h1>
-
+    <!-- Завершені завдання -->
+    <h2 class="section-subtitle">Завершені завдання</h2>
     <div class="tasks-grid">
-        {% for task in completed_tasks %}
-            {% include "tasks/task_card.html" with task=task %}
+        {% for task in tasks %}
+            {% if task.completed %}
+                {% include "tasks/task_card.html" with task=task %}
+            {% endif %}
         {% empty %}
             <div class="empty-state">
                 <h3>Поки що немає завершених завдань</h3>
@@ -43,6 +50,22 @@
             </div>
         {% endfor %}
     </div>
+
+    <!-- Пагінація -->
+    {% if is_paginated %}
+        <div class="pagination">
+            {% if tasks.has_previous %}
+                <a href="?page={{ tasks.previous_page_number }}">Попередня</a>
+            {% endif %}
+
+            <span>Сторінка {{ tasks.number }} з {{ tasks.paginator.num_pages }}</span>
+
+            {% if tasks.has_next %}
+                <a href="?page={{ tasks.next_page_number }}">Наступна</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
 </div>
 
 {% endblock %}

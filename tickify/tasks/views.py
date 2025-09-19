@@ -43,12 +43,13 @@ class HomeView(DataMixin, TemplateView):
         return self.get_mixin_context(context,
                                       categories=Category.objects.filter(user=user) if user.is_authenticated else None,)
 
+
 class TaskListView(LoginRequiredMixin, DataMixin, ListView):
     model = Task
     template_name = "tasks/tasks_list.html"
-    context_object_name = 'tasks'
     title_page = 'Tasks'
     login_url = reverse_lazy('login')
+    paginate_by = 4
 
     def get_queryset(self):
         category_slug = self.kwargs.get("category_slug")
@@ -72,6 +73,7 @@ class TaskListView(LoginRequiredMixin, DataMixin, ListView):
                                       current_category=self.current_category,
                                       completed_tasks=tasks_qs.filter(completed=True),
                                       uncompleted_tasks=tasks_qs.filter(completed=False),
+                                      tasks = context['page_obj']
                                       )
 
 
@@ -115,6 +117,7 @@ class EditTaskView(DataMixin, UpdateView):
 
     def get_queryset(self):
         return Task.objects.filter(user=self.request.user)
+
 
 class DeleteTaskView(DataMixin, DeleteView):
     model = Task
