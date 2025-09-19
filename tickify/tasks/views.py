@@ -1,7 +1,10 @@
+from symtable import Class
+
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 
 from tasks.forms import AddTaskForm, UploadFileForm
 from tasks.models import Task, Category, UploadFile
@@ -106,44 +109,51 @@ class TaskCategoryView(ListView):
         context['uncompleted_tasks'] = self.get_queryset().filter(completed=False)
         return context
 
-def tasks_detail(request, task_slug):
-    task = get_object_or_404(Task, slug=task_slug)
+class TaskDetailView(DetailView):
+    model = Task
+    template_name = "tasks/task_detail.html"
+    slug_url_kwarg = "task_slug"
+    context_object_name = "task"
 
-    data = {
-        'title': task.title,
-        'task': task,
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.object.title.capitalize()
+        return context
+
+class PageNotFoundView(TemplateView):
+    template_name = "tasks/404.html"
+
+
+class ContactsView(TemplateView):
+    template_name = "tasks/contacts.html"
+
+
+class AddTaskView(CreateView):
+    form_class = AddTaskForm
+    template_name = "tasks/add_task.html"
+    success_url = reverse_lazy('tasks_list')
+    extra_context = {
+        'title': 'Додавання завдання'
     }
 
-    return render(request, "tasks/task_detail.html", context=data)
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
+class EditTaskView(UpdateView):
+    model = Task
+    form_class = AddTaskForm
+    template_name = "tasks/add_task.html"
+    slug_url_kwarg = "task_slug"
+    extra_context = {
+        'title': 'Редагування завдання'
+    }
 
-def page_not_found(request, exception):
-    return HttpResponseNotFound("<h1>Сторінка не знайдена.</h1>")
+    def get_queryset(self):
+        return Task.objects.filter(user=self.request.user)
 
-def contact(request):
-
-    return render(request, "tasks/contacts.html",)
-
-
-class AddTaskView(View):
-    def get(self, request):
-        form = AddTaskForm(user=request.user)
-        data = {
-            'title': 'Add Task',
-            'form': form,
-        }
-        return render(request, "tasks/add_task.html", context=data)
-
-    def post(self, request):
-        form = AddTaskForm(request.POST, request.FILES, user=request.user)
-        if form.is_valid():
-            task = form.save(commit=False)
-            task.user = request.user
-            task.save()
-            return redirect('tasks_list')
-
-        data = {
-            'title': 'Add Task',
-            'form': form,
-        }
-        return render(request, "tasks/add_task.html", context=data)
+class DeleteTaskView(DeleteView):
+    model = Task
+    template_name = "tasks/delete_task.html"
+    success_url = reverse_lazy('tasks_list')
+    slug_url_kwarg = "task_slug"

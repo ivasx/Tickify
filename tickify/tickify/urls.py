@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from tasks import views
-from tasks.views import page_not_found
+from tasks.views import PageNotFoundView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +26,6 @@ urlpatterns = [
     path('__debug__/', include('debug_toolbar.urls')),
 ]
 
-handler404 = page_not_found
+handler404 = PageNotFoundView.as_view()
 
 admin.site.site_header = "Tickify | Панель адміністрування"

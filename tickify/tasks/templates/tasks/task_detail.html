@@ -9,6 +9,9 @@
 
 {% if task.photo %}
 <img src="{{ task.photo.url }}" alt="">
-{% endif %}}}
 
+{% endif %}}}
+<a href="{% url 'delete_task' task.slug %}">
+    <button>Delete</button>
+</a>
 {% endblock%}
