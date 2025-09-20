@@ -1,5 +1,6 @@
 from symtable import Class
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
@@ -28,7 +29,7 @@ class TaskListView(LoginRequiredMixin, DataMixin, ListView):
     model = Task
     template_name = "tasks/tasks_list.html"
     title_page = 'Tasks'
-    login_url = reverse_lazy('users:login')
+
     paginate_by = 4
 
     def get_queryset(self):
@@ -77,7 +78,7 @@ class ContactsView(TemplateView):
     template_name = "tasks/contacts.html"
 
 
-class AddTaskView(DataMixin, CreateView):
+class AddTaskView(LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddTaskForm
     template_name = "tasks/add_task.html"
     success_url = reverse_lazy('tasks_list')
