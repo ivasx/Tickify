@@ -12,26 +12,6 @@ from tasks.models import Task, Category, UploadFile
 from tasks.utils import DataMixin
 
 # Create your views here.
-def register(request):
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            return redirect('home')
-
-
-def login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            return redirect('home')
-
-
 class HomeView(DataMixin, TemplateView):
     template_name = "tasks/home.html"
     title_page = 'Home'

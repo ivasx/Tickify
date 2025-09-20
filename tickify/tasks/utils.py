@@ -2,8 +2,6 @@ menu = [{'title': 'Home', 'url': 'home'},
         {'title': 'Tasks', 'url': 'tasks_list'},
         {'title': 'Add Task', 'url': 'add_task'},
         {'title': 'Contact', 'url': 'contact'},
-        {'title': 'Login', 'url': 'login'},
-        {'title': 'Register', 'url': 'register'}
         ]
 
 
