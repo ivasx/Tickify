@@ -1,16 +1,27 @@
+{% load task_tags %}
+
 <div class="header">
     <div class="logo">
         <h1>Tickify</h1>
     </div>
     <nav class="main-nav">
         <ul>
-            {% for item in menu %}
+            {% for item in mainmenu %}
             <li><a href="{% url item.url %}">{{ item.title }}</a></li>
             {% endfor %}
         </ul>
     </nav>
 
+    {% if user.is_authenticated %}
     <div class="header-extra">
-        <button>Увійти</button>
+        <ul class="main-nav">
+            <li><a>{{ user.username }} | </a><a href="{% url 'users:logout' %}">Вийти</a></li>
+        </ul>
     </div>
+    {% else %}
+    <div class="header-extra">
+        <a href="{% url 'users:login' %}"><button>Увійти</button></a>
+        <a href="{% url 'users:login' %}"><button>Зареєструватись</button></a>
+    </div>
+    {% endif %}
 </div>

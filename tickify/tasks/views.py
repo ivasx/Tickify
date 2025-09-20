@@ -28,7 +28,7 @@ class TaskListView(LoginRequiredMixin, DataMixin, ListView):
     model = Task
     template_name = "tasks/tasks_list.html"
     title_page = 'Tasks'
-    login_url = reverse_lazy('login')
+    login_url = reverse_lazy('users:login')
     paginate_by = 4
 
     def get_queryset(self):
