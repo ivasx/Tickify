@@ -132,9 +132,5 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
 
-class User(AbstractUser):
-    pass
-
-
 class UploadFile(models.Model):
     file = models.FileField(upload_to='uploads')

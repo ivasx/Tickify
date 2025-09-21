@@ -13,6 +13,7 @@ urlpatterns = [
     path('add_task/', views.AddTaskView.as_view(), name='add_task'),
     path('edit_task/<slug:task_slug>/', views.EditTaskView.as_view(), name='edit_task'),
     path('delete_task/<slug:task_slug>/', views.DeleteTaskView.as_view(), name='delete_task'),
+    path('create_category/', views.CreateCategoryView.as_view(), name='create_category'),
 ]
 
 if settings.DEBUG:

@@ -50,7 +50,6 @@ class AddTaskForm(forms.ModelForm):
         if user:
             self.fields['category'].queryset = Category.objects.filter(user=user)
 
-        # Додавання стилю для вибору категорії
         self.fields['category'].widget.attrs.update({"class": "form-input"})
 
     def clean_title(self):
@@ -58,6 +57,27 @@ class AddTaskForm(forms.ModelForm):
         if len(title) > 250:
             raise forms.ValidationError("Ого-го! Назва задачі може бути не більше 250 символів.")
         return title
+
+class CreateCategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={"class": "form-input","placeholder": "Введіть назву категорії"}),
+        }
+        labels = {
+            'name': 'Назва категорії:',
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        if self.user and Category.objects.filter(user=self.user, name=name).exists():
+            raise forms.ValidationError('Категорія з такою назвою вже існує.')
+        return name
 
 class UploadFileForm(forms.Form):
     file = forms.FileField(label="Файл")

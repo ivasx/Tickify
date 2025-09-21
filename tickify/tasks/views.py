@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 
-from tasks.forms import AddTaskForm, UploadFileForm
+from tasks.forms import AddTaskForm, UploadFileForm, CreateCategoryForm
 from tasks.models import Task, Category, UploadFile
 from tasks.utils import DataMixin
 
@@ -84,9 +84,32 @@ class AddTaskView(LoginRequiredMixin, DataMixin, CreateView):
     success_url = reverse_lazy('tasks_list')
     title_page = 'Додавання завдання'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+class CreateCategoryView(LoginRequiredMixin, DataMixin, CreateView):
+    model = Category
+    form_class = CreateCategoryForm
+    template_name = "tasks/create_category.html"
+    success_url = reverse_lazy('tasks_list')
+    title_page = 'Створення категорії'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
 
 
 class EditTaskView(DataMixin, UpdateView):
