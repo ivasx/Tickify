@@ -46,8 +46,6 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
 ]
 
-AUTH_USER_MODEL = 'auth.User'
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -162,3 +160,5 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
+
+AUTH_USER_MODEL = 'users.User'
