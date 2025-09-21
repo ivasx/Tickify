@@ -22,8 +22,10 @@
         </p>
         {% endfor %}
 
-        <button type="submit" class="btn-submit">Авторизуватись</button>
-        <p><a href="{% url 'users:password_reset' %}">Забули пароль?</a></p>
+        <button type="submit" class="btn-submit">Зберегти</button>
     </form>
+
+    <br>
+    <p><a href="{% url 'users:password_change' %}">Змінити пароль</a></p>
 </div>
 {% endblock %}

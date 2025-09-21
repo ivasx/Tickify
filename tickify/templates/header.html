@@ -15,7 +15,7 @@
     {% if user.is_authenticated %}
     <div class="header-extra">
         <ul class="main-nav">
-            <li><a>{{ user.username }} | </a><a href="{% url 'users:logout' %}">Вийти</a></li>
+            <li><a href="{% url 'users:profile' %}">{{ user.username }} | </a><a href="{% url 'users:logout' %}">Вийти</a></li>
         </ul>
     </div>
     {% else %}
