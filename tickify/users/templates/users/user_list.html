@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Список користувачів</h2>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Логін</th>
+            <th>Email</th>
+            <th>Активний</th>
+            <th>Адмін</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in object_list %}
+        <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.username }}</td>
+            <td>{{ u.email }}</td>
+            <td>
+                {% if u.is_active %}
+                    ✅ Активний
+                {% else %}
+                    ⛔ Неактивний
+                {% endif %}
+            </td>
+            <td>
+                {% if u.is_superuser %}
+                    🛡️ Суперюзер
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">Користувачів немає</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

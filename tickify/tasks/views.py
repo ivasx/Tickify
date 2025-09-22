@@ -1,7 +1,7 @@
 from symtable import Class
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -83,6 +83,7 @@ class AddTaskView(LoginRequiredMixin, DataMixin, CreateView):
     template_name = "tasks/add_task.html"
     success_url = reverse_lazy('tasks_list')
     title_page = 'Додавання завдання'
+    # permission_required = 'tasks.add_task'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

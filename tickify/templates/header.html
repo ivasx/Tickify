@@ -13,15 +13,25 @@
     </nav>
 
     {% if user.is_authenticated %}
+    {% if perms.users.change_user %}
+            <a href="{% url 'users:admin_users' %}">
+                <button>Користувачі</button>
+            </a>
+            {% endif %}
     <div class="header-extra">
         <ul class="main-nav">
-            <li><a href="{% url 'users:profile' %}">{{ user.username }} | </a><a href="{% url 'users:logout' %}">Вийти</a></li>
+            <li><a href="{% url 'users:profile' %}">{{ user.username }} | </a><a
+                    href="{% url 'users:logout' %}">Вийти</a></li>
         </ul>
     </div>
     {% else %}
     <div class="header-extra">
-        <a href="{% url 'users:login' %}"><button>Увійти</button></a>
-        <a href="{% url 'users:register' %}"><button>Зареєструватись</button></a>
+        <a href="{% url 'users:login' %}">
+            <button>Увійти</button>
+        </a>
+        <a href="{% url 'users:register' %}">
+            <button>Зареєструватись</button>
+        </a>
     </div>
     {% endif %}
 </div>
