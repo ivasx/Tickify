@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     'tasks.apps.TasksConfig',
     'users.apps.UsersConfig',
+    'rest_framework',
 ]
 
 
@@ -117,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'uk-UA'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Kiev'
 
 USE_I18N = True
 

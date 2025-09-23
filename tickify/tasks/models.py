@@ -75,7 +75,7 @@ class Task(models.Model):
         return reverse('tasks_detail', kwargs={'task_slug': self.slug})
 
     def clean(self):
-        if self.category and self.category.user != self.user:
+        if self.category and hasattr(self, 'user') and self.user and self.category.user != self.user:
             raise ValidationError('Завдання не може бути в категорії другого користувача')
 
 

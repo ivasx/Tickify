@@ -1,18 +1,37 @@
-from symtable import Class
-
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.http import HttpResponse, HttpResponseNotFound
+from django.forms import model_to_dict
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from tasks.forms import AddTaskForm, UploadFileForm, CreateCategoryForm
 from tasks.models import Task, Category, UploadFile
+from tasks.serializers import TaskSerializer
 from tasks.utils import DataMixin
 
+from rest_framework import generics
 # Create your views here.
+class TaskAPIView(APIView):
+    def get(self, request):
+        lst = Task.objects.all().values()
+        return Response({"tasks": list(lst)})
+
+    def post(self, request):
+        task_new = Task.objects.create(
+            title = request.data.get('title'),
+            description = request.data.get('description'),
+            category = request.data.get('category'),
+        )
+        return Response({"task": model_to_dict(task_new)})
+
+# class TaskAPIView(generics.ListAPIView):
+#     queryset = Task.objects.all()
+#     serializer_class = TaskSerializer
+
+
+
 class HomeView(DataMixin, TemplateView):
     template_name = "tasks/home.html"
     title_page = 'Home'

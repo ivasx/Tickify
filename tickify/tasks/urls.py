@@ -3,6 +3,7 @@ from django.urls import path
 
 from tickify import settings
 from . import views
+from .views import TaskAPIView
 
 urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
@@ -14,6 +15,8 @@ urlpatterns = [
     path('edit_task/<slug:task_slug>/', views.EditTaskView.as_view(), name='edit_task'),
     path('delete_task/<slug:task_slug>/', views.DeleteTaskView.as_view(), name='delete_task'),
     path('create_category/', views.CreateCategoryView.as_view(), name='create_category'),
+
+    path('api/v1/tasklist/', TaskAPIView.as_view())
 ]
 
 if settings.DEBUG:
