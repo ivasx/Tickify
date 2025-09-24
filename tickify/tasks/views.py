@@ -18,6 +18,19 @@ class TaskAPIView(generics.ListCreateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
+class TaskAPIUpdate(generics.UpdateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'task_slug'
+
+class TaskAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.filter()
+    serializer_class = TaskSerializer
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'task_slug'
+
+
     # def post(self, request):
     #     serializer = TaskSerializer(data=request.data)
     #     serializer.is_valid(raise_exception=True)
