@@ -16,7 +16,8 @@ urlpatterns = [
     path('delete_task/<slug:task_slug>/', views.DeleteTaskView.as_view(), name='delete_task'),
     path('create_category/', views.CreateCategoryView.as_view(), name='create_category'),
 
-    path('api/v1/tasklist/', TaskAPIView.as_view())
+    path('api/v1/tasklist/', TaskAPIView.as_view()),
+    path('api/v1/tasklist/<slug:task_slug>/', TaskAPIView.as_view())
 ]
 
 if settings.DEBUG:

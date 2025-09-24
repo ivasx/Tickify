@@ -3,6 +3,7 @@ from django.forms import model_to_dict
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -13,18 +14,44 @@ from tasks.utils import DataMixin
 
 from rest_framework import generics
 # Create your views here.
-class TaskAPIView(APIView):
-    def get(self, request):
-        lst = Task.objects.all().values()
-        return Response({"tasks": list(lst)})
+class TaskAPIView(generics.ListCreateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
 
-    def post(self, request):
-        task_new = Task.objects.create(
-            title = request.data.get('title'),
-            description = request.data.get('description'),
-            category = request.data.get('category'),
-        )
-        return Response({"task": model_to_dict(task_new)})
+    # def post(self, request):
+    #     serializer = TaskSerializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #
+    #     return Response({"task": serializer.data})
+
+    # def put(self, request, *args, **kwargs):
+    #     slug = kwargs.get("task_slug", None)
+    #     if not slug:
+    #         return Response({"error": "Method PUT isn't allowed"})
+    #
+    #     try:
+    #         instance = Task.objects.get(slug=slug)
+    #     except:
+    #         return Response({"error": "Task not found"})
+    #
+    #     serializer = TaskSerializer(instance, data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     return Response({"task": serializer.data})
+    #
+    # def delete(self, request, *args, **kwargs):
+    #     slug = kwargs.get("task_slug", None)
+    #     if not slug:
+    #         return Response({"error": "Method DELETE isnt allowed"})
+    #
+    #     try:
+    #         instance = Task.objects.get(slug=slug)
+    #     except:
+    #         return Response({"error": "Task not found"})
+    #
+    #     instance.delete()
+    #     return Response({"message": "Task deleted"})
 
 # class TaskAPIView(generics.ListAPIView):
 #     queryset = Task.objects.all()
