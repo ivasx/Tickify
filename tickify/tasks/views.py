@@ -3,6 +3,7 @@ from django.forms import model_to_dict
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
+from rest_framework.decorators import action
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -12,64 +13,26 @@ from tasks.models import Task, Category, UploadFile
 from tasks.serializers import TaskSerializer
 from tasks.utils import DataMixin
 
-from rest_framework import generics
+from rest_framework import generics, viewsets
+
+
 # Create your views here.
-class TaskAPIView(generics.ListCreateAPIView):
-    queryset = Task.objects.all()
-    serializer_class = TaskSerializer
-
-class TaskAPIUpdate(generics.UpdateAPIView):
-    queryset = Task.objects.all()
+class TaskViewSet(viewsets.ModelViewSet):
+    # queryset = Task.objects.all()
     serializer_class = TaskSerializer
     lookup_field = 'slug'
     lookup_url_kwarg = 'task_slug'
 
-class TaskAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Task.objects.filter()
-    serializer_class = TaskSerializer
-    lookup_field = 'slug'
-    lookup_url_kwarg = 'task_slug'
+    def get_queryset(self):
+        slug = self.kwargs.get('slug')
+        if not slug:
+            return Task.objects.all()
+        return Task.objects.filter(slug=slug)
 
-
-    # def post(self, request):
-    #     serializer = TaskSerializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #
-    #     return Response({"task": serializer.data})
-
-    # def put(self, request, *args, **kwargs):
-    #     slug = kwargs.get("task_slug", None)
-    #     if not slug:
-    #         return Response({"error": "Method PUT isn't allowed"})
-    #
-    #     try:
-    #         instance = Task.objects.get(slug=slug)
-    #     except:
-    #         return Response({"error": "Task not found"})
-    #
-    #     serializer = TaskSerializer(instance, data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     return Response({"task": serializer.data})
-    #
-    # def delete(self, request, *args, **kwargs):
-    #     slug = kwargs.get("task_slug", None)
-    #     if not slug:
-    #         return Response({"error": "Method DELETE isnt allowed"})
-    #
-    #     try:
-    #         instance = Task.objects.get(slug=slug)
-    #     except:
-    #         return Response({"error": "Task not found"})
-    #
-    #     instance.delete()
-    #     return Response({"message": "Task deleted"})
-
-# class TaskAPIView(generics.ListAPIView):
-#     queryset = Task.objects.all()
-#     serializer_class = TaskSerializer
-
+    @action(methods=['get'], detail=False, url_path='category/(?P<user_id>[^/.]+)')
+    def categories(self, request, user_id=None):
+        categories = Category.objects.filter(user_id=user_id)
+        return Response({'categories': [c.name for c in categories]})
 
 
 class HomeView(DataMixin, TemplateView):
