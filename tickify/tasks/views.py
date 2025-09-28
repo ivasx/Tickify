@@ -4,12 +4,14 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from tasks.forms import AddTaskForm, UploadFileForm, CreateCategoryForm
 from tasks.models import Task, Category, UploadFile
+from tasks.permisions import IsOwner
 from tasks.serializers import TaskSerializer
 from tasks.utils import DataMixin
 
@@ -22,12 +24,11 @@ class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
     lookup_field = 'slug'
     lookup_url_kwarg = 'task_slug'
+    permission_classes = (IsOwner,)
 
     def get_queryset(self):
-        slug = self.kwargs.get('slug')
-        if not slug:
-            return Task.objects.all()
-        return Task.objects.filter(slug=slug)
+        def get_queryset(self):
+            return Task.objects.filter(user=self.request.user)
 
     @action(methods=['get'], detail=False, url_path='category/(?P<user_id>[^/.]+)')
     def categories(self, request, user_id=None):
