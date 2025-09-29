@@ -27,8 +27,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     permission_classes = (IsOwner,)
 
     def get_queryset(self):
-        def get_queryset(self):
-            return Task.objects.filter(user=self.request.user)
+        return Task.objects.filter(user=self.request.user)
 
     @action(methods=['get'], detail=False, url_path='category/(?P<user_id>[^/.]+)')
     def categories(self, request, user_id=None):

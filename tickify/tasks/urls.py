@@ -21,6 +21,7 @@ urlpatterns = [
     path('create_category/', views.CreateCategoryView.as_view(), name='create_category'),
 
     path('api/v1/', include(router.urls)),
+    path('api/v1/auth/', include('rest_framework.urls')),
     # path('api/v1/tasklist/', TaskViewSet.as_view({'get': 'list'})),
     # path('api/v1/tasklist/<slug:task_slug>/', TaskViewSet.as_view({'put': 'update'})),
     # path('api/v1/taskdetail/<slug:task_slug>/', TaskViewSet.as_view())
