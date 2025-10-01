@@ -1,5 +1,5 @@
 from django.conf.urls.static import static
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 from tickify import settings
 from . import views
@@ -21,10 +21,12 @@ urlpatterns = [
     path('create_category/', views.CreateCategoryView.as_view(), name='create_category'),
 
     path('api/v1/', include(router.urls)),
-    path('api/v1/auth/', include('rest_framework.urls')),
+    path('api/v1/auth/', include('djoser.urls')),
+    re_path(r'^auth/', include('djoser.urls.authtoken')),
     # path('api/v1/tasklist/', TaskViewSet.as_view({'get': 'list'})),
     # path('api/v1/tasklist/<slug:task_slug>/', TaskViewSet.as_view({'put': 'update'})),
     # path('api/v1/taskdetail/<slug:task_slug>/', TaskViewSet.as_view())
+
 ]
 
 if settings.DEBUG:
