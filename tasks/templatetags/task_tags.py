@@ -1,6 +1,5 @@
 from django import template
 import tasks.views as views
-from tasks.models import Category, Task
 from tasks.utils import menu
 
 register = template.Library()
